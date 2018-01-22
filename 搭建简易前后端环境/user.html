@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script>
+        window.onload=function(){
+            var oTxtUser=document.getElementById('user');
+            var oTxtPass=document.getElementById('pass');
+            var oBtnLogin=document.getElementById('login_btn');
+            var oBtnReg=document.getElementById('reg_btn');
+
+            oBtnReg.onclick=function(){
+                var request=new XMLHttpRequest();
+                request.open(
+                    'GET',
+                    'user?act=reg&user='+oTxtUser.value+'&pass='+oTxtPass.value
+                );
+                request.send();
+                request.onreadystatechange=function(){
+                    if(request.readyState===4){
+                        if(request.status==200){
+                           var json=eval('('+request.responseText+')');
+                           if(json.ok){
+                               alert('注册成功')
+                           }else{
+                               alert('注册失败'+json.msg)
+                           }
+                        }else{
+                            alert('发生错误'+requset.status)
+                        }
+                    }
+                }
+            }
+            oBtnLogin.onclick=function(){
+                var request=new XMLHttpRequest();
+                request.open(
+                    'GET',
+                    'user?act=login&user='+oTxtUser.value+'&pass='+oTxtPass.value
+                );
+                request.send();
+                request.onreadystatechange=function(){
+                    if(request.readyState===4){
+                        if(request.status==200){
+                            var json=eval('('+request.responseText+')');
+                            if(json.ok){
+                                alert('登录成功')
+                            }else{
+                                alert('登录失败'+json.msg)
+                            }
+                        }else{
+                            alert('发生错误'+requset.status)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    用户：<input type="text"id="user"><br>
+    密码，<input type="password"id="pass"><br>
+    <input type="button"value="注册"id="reg_btn">
+    <input type="button"value="登录"id="login_btn">
+</body>
+</html>
