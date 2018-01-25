@@ -1,0 +1,16 @@
+doctype
+html
+    head
+        meta(charset='utf-8')
+        title jade页面
+        style.
+            div{width:100px;height:100px;background:#ccc;float:left;margin:10px 20px;}
+            .active{color:#b94a48;clear:left;font-size:30px}
+    body
+        -var a=0;
+        while a<12
+            if a%4==0 && a!=0
+                div.active #{a++}
+            else
+                div #{a++}
+
