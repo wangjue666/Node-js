@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .mine{
+            background:green;
+            color:white;
+        }
+    </style>
+    <script src="http://localhost:8080/socket.io/socket.io.js"charset="utf-8"></script>
+    <script>
+        let socket=io.connect('ws://localhost:8080/');
+        window.onload=function(){
+            let cur_name='';
+            var oUser=document.querySelector('#user');
+            var oPass=document.querySelector('#pass');
+            var oBtn1=document.querySelector('#btn');
+            var oBtn2=document.querySelector('#btn2');
+            var oBtnSend=document.querySelector('#send');
+            var oTxt=document.querySelector('#txt1');
+            var oUl=document.querySelector('#ul1');
+            oBtnSend.onclick=function(){
+                socket.emit('msg',oTxt.value);
+            }
+            socket.on('reg_ret',(code,msg)=>{
+                if(code){
+                    alert('注册失败'+msg);
+                }else{
+                    alert(msg)
+                }
+            })
+            socket.on('login_ret',(code,msg)=>{
+                if(code){
+                    alert('登录失败'+msg);
+                }else{
+                    alert(msg)
+                    cur_name=oUser.value;
+                }
+            });
+            socket.on('msg',(name,txt)=>{
+                let oLi=document.createElement('li');
+                oLi.innerHTML=`<h4>${name}</h4>`+`<p>${txt}</p>`
+                oUl.appendChild(oLi);
+            });
+            socket.on('msg_ret',(code,msg)=>{
+                if(code){
+                    alert('消息发送失败'+msg);
+                }else{
+                    let oLi=document.createElement('li');
+                    oLi.className='mine';
+                    oLi.innerHTML=`<h4>${cur_name}</h4>\n`+`<p>${oTxt.value}</p>`;
+                    oUl.appendChild(oLi);
+                }
+            })
+            oBtn1.onclick=function(){
+                socket.emit('reg',oUser.value,oPass.value);
+            }
+            oBtn2.onclick=function(){
+                socket.emit('login',oUser.value,oPass.value);
+            }
+        }
+    </script>
+</head>
+<body>
+用户 <input id="user" type="text">
+密码 <input id="pass" type="password">
+<button id="btn">注册</button>
+<button id="btn2">登录</button>
+<hr>
+<textarea name="txt1" id="txt1" cols="30" rows="4"></textarea>
+<button id="send">提交</button>
+<ul id="ul1">
+
+</ul>
+</body>
+</html>
